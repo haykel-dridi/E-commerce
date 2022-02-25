@@ -1,0 +1,117 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName rh
+    blueprints []
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework angularX
+    clientPackageManager npm
+    databaseType sql
+    devDatabaseType h2Disk
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache true
+    enableSwaggerCodegen true
+    enableTranslation false
+    jhiPrefix jhi
+    jhipsterVersion "6.10.5"
+    jwtSecretKey "MDg4YTY3NThkNjYxNWY0ZjJiMWRjNTM1ZDYzZGZhZGFlMzkzZThiMzk2NjlmYzg0OGM4MjQ2OTI1ZTM5Njc2YjMwM2QxMmI0ZWJmNzk0NzA4ODg0MjFhZDMwY2FhYTNlZWQxYzcyODA2YWU1MDJiMGIxYjhiNTA4MTFjMTc0MmQ="
+    languages [en, fr]
+    messageBroker false
+    nativeLanguage en
+    otherModules []
+    packageName tn.com.kendy
+    prodDatabaseType oracle
+    serverPort 8080
+    serviceDiscoveryType false
+    skipClient false
+    skipServer false
+    testFrameworks []
+    websocket spring-websocket
+	skipUserManagement false
+  }
+
+  entities AppUser, Manufucture, Invoice, Order, Product, Category, Address
+}
+
+
+entity Manufucture {
+	id Long,
+    name String required,
+    avatar String
+	
+}
+
+entity Order {
+    id Long,
+	creationDate Instant,
+    totale Double,
+    status OrderStatus
+    
+}
+
+entity Product {
+    id Long,
+	titre String required,
+    price Double,
+    creationDate Instant,
+    photo String,
+    active Boolean
+}
+
+
+entity Category {
+    id Long,
+	titre String required,
+    description String,
+    active Boolean,
+    creationDate LocalDate
+}
+
+entity Address {
+    id Long,
+    gouvernerat String,
+    city String,
+    addressLine1 String,
+    addressLine2 String
+    postalCode Integer
+}
+entity AppUser {
+    id Long
+}
+entity Invoice {
+    id Long,
+    creationDate Instant,
+    totale Double,
+    
+}
+enum OrderStatus {
+    PENDING,
+    PACK,
+    DELEVRED,
+    REJECTED
+}
+
+
+relationship OneToMany {
+	Order{products} to Product
+    AppUser{orders} to Order
+    Address to AppUser{addresses}
+    Address to Manufucture{addresses}    
+    
+}
+
+relationship ManyToOne {
+    Category to Product{category}
+    Product{manufucture} to Manufucture{products}
+    Invoice{client} to AppUser{invoices}
+    Invoice{order} to Order
+    
+}
+
+paginate * with pagination
+service *  with serviceImpl
+dto * with mapstruct
+filter *
